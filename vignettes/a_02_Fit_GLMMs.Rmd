@@ -1,0 +1,565 @@
+---
+title: "Fit GLMMs"
+author: "Ihsan Khaliq"
+date: "`r Sys.Date()`"
+output:
+   rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Fit GLMMs}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+knitr::opts_chunk$set(progress = TRUE, verbose = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  fig.width = 7,
+  fig.height = 7,
+  fig.align = "center"
+)
+
+devtools::load_all()
+```
+
+
+Load libraries 
+
+```{r libraries, echo=TRUE, warning=FALSE}
+library("readxl")
+library("tidyverse")
+library("dplyr")
+library("ggeffects")
+library("here")
+library("glmmTMB")
+library("lubridate")
+library("ggpubr")
+library("kableExtra")
+library("DHARMa")
+library("SDMTools")
+library("ggthemes")
+library("epibxb")
+```
+
+
+
+```{r fonts, include=FALSE, message=FALSE, eval=FALSE, message=FALSE}
+# Note that GhostScript needs to be installed at the system level for the PS files to be generated.
+# MacOS users can use `brew install ghostscript`
+# 
+# Windows users can follow these directions:
+# 1.	Go to the GhostScript website (https://www.ghostscript.com/download/gsdnld.html)
+# 2.	Download the windows installer suitable for your machine
+# 3.	Run the installer file which you downloaded and follow the prompts
+# 4.	After running the installer click the windows "Start" button and type "Edit environment variables for your account" and open
+# 5.	In the tab 'Advanced' click the button at the bottom 'Environment Variables...'
+# 6.	Under 'System variables' find the variable 'Path', select 'Path' and click the 'Edit' button
+# 7. 	Select a new line and copy the Ghostscript 'bin' folder location into the field.
+# 7.1	If you installed ghostscript to the default folder location; then the folder location will likely be "C:\Program Files\gs\gs9.52\bin", the version number (9.52) may differ.
+# 8.	Save and exit the environmental variables window
+# This chunk is then run only if knitting on new computer that the files have not been generated on
+# this is necessary to embed fonts in .eps files 
+library("extrafont")
+if (.Platform$OS.type == "windows") {
+   font_import(pattern = "arial", prompt = FALSE)
+   loadfonts(device = "postscript", quiet = TRUE)
+} else {
+   font_import(pattern = "Arial", prompt = FALSE)
+   loadfonts(device = "postscript", quiet = TRUE)
+}
+```
+
+
+
+## Import disease data 
+
+### Import disease data
+
+```{r import-disease-data, message=FALSE, warning=FALSE}
+disease_dat <- read_excel(system.file(
+  "extdata",
+  "NC_disease_data.xlsx",
+  package = "epibxb",
+  mustWork = TRUE
+)) %>%
+  dplyr::mutate(year = as.factor(year)) %>%
+  dplyr::mutate(location = as.factor(location)) %>%
+  dplyr::mutate(spread_event = as.factor(spread_event)) %>%
+  dplyr::mutate(replicate = as.factor(replicate)) %>%
+  dplyr::mutate(treatment = as.factor(treatment)) %>%
+  dplyr::mutate(total_count = as.integer(total_count)) %>%
+  dplyr::mutate(month = as.factor(months(date_in))) %>%
+  dplyr::mutate(spev_duration = as.integer(difftime(date_out, date_in))) %>%
+  relocate(month, .after = date_out) %>%
+  na.omit() %>%
+  group_by(
+    year,
+    location,
+    spread_event,
+    month,
+    treatment,
+    date_in,
+    date_out,
+    cultivar,
+    spev_duration
+  ) %>%
+  summarise(total_count = sum(total_count))
+
+#openxlsx::write.xlsx(disease_dat, "Table S1.xlsx", rowNames=FALSE)
+```
+
+
+
+### Import weather data 
+
+```{r import-weather-data, message=FALSE, warning=FALSE}
+# Filter rainy periods to calculate average wind speed, wind direction & temperature wet period
+weather_dat_rain <- read_excel(system.file(
+  "extdata",
+  "NC_weather_data.xlsx",
+  package = "epibxb",
+  mustWork = TRUE
+)) %>%
+  select(year,
+         wind_speed,
+         wind_direction,
+         temperature,
+         precipitation,
+         location,
+         spread_event) %>%
+  dplyr::mutate(year = as.factor(year)) %>%
+  dplyr::mutate(location = as.factor(location)) %>%
+  dplyr::mutate(spread_event = as.factor(spread_event)) %>%
+  dplyr::mutate(rain_duration = as.integer(precipitation > 0)) %>%
+  filter(precipitation > 0) %>%
+  group_by(year, location, spread_event) %>%
+  summarise(
+    total_rain = round(sum(precipitation), 5),
+    mean_ws = round(mean(wind_speed), 2),
+    rain_duration = round(sum(rain_duration * 15 / 60), 2),
+    mean_wd = round(circular.averaging(wind_direction), 2),
+    mean_temp = round(mean(temperature), 2)
+  )
+
+# Filter rainless periods to calculate mean RH
+weather_dat_no_rain <-
+  read_excel(system.file(
+    "extdata",
+    "NC_weather_data.xlsx",
+    package = "epibxb",
+    mustWork = TRUE
+  )) %>%
+  select(
+    year,
+    relative_humidity,
+    leaf_wetness_duration,
+    precipitation,
+    location,
+    spread_event,
+    date
+  ) %>%
+  dplyr::mutate(year = as.factor(year)) %>%
+  dplyr::mutate(location = as.factor(location)) %>%
+  dplyr::mutate(spread_event = as.factor(spread_event)) %>%
+  filter(precipitation == 0) %>%
+  group_by(year, location, spread_event) %>%
+  summarise(mean_rh = round(mean(relative_humidity * 100), 2))
+
+# Combine data
+weather_dat_comb <-
+  left_join(weather_dat_rain,
+            weather_dat_no_rain,
+            by = c("year", "location", "spread_event"))
+
+# Leaf wetness duration both inside and outside rainy periods
+weather_wet <- read_excel(system.file(
+  "extdata",
+  "NC_weather_data.xlsx",
+  package = "epibxb",
+  mustWork = TRUE
+)) %>%
+  dplyr::mutate(year = as.factor(year)) %>%
+  dplyr::mutate(location = as.factor(location)) %>%
+  dplyr::mutate(spread_event = as.factor(spread_event)) %>%
+  group_by(year, location, spread_event) %>%
+  summarise(lwd_duration = round(sum(leaf_wetness_duration / 60), 2))
+
+weather_dat <-
+  left_join(weather_dat_comb,
+            weather_wet,
+            by = c("year", "location", "spread_event"))
+
+# Divide week 1 of 2014 rain/rain duration/wetness duration by 4 & that of week 2 & 3 by 3 to convert to per week data because the duration of spread event was 4 and 3 weeks, respectively.
+
+weather_dat <- weather_dat %>%
+  mutate(
+    total_rain = ifelse(
+      year == "2017" & spread_event == "1",
+      total_rain / 4,
+      ifelse(
+        year == "2017" &
+          spread_event %in% c("2", "3"),
+        total_rain / 3,
+        total_rain
+      )
+    ),
+    rain_duration = ifelse(
+      year == "2017" & spread_event == "1",
+      rain_duration / 4,
+      ifelse(
+        year == "2017" &
+          spread_event %in% c("2", "3"),
+        rain_duration / 3,
+        rain_duration
+      )
+    ),
+    lwd_duration = ifelse(
+      year == "2017" & spread_event == "1",
+      lwd_duration / 4,
+      ifelse(
+        year == "2017" &
+          spread_event %in% c("2", "3"),
+        lwd_duration / 3,
+        lwd_duration
+      )
+    )
+  )
+```
+
+
+### Cobmine weather & disease data
+
+Combine weather and disease data
+
+```{r combine-data}
+dat_NC <-
+  left_join(disease_dat,
+            weather_dat,
+            by = c("year", "location", "spread_event")) %>%
+  # Replace NA with zero because NA are introduced due to data munging. Original values were zero
+  dplyr::mutate(total_rain = replace_na(total_rain, 0)) %>%
+  dplyr::mutate(rain_duration = replace_na(rain_duration, 0))
+
+# Since we filtered data separately for precipitation and then without precipitation, NAs are introduced. In this step, data (in which values were added manually) is imported
+
+dat_missing <- read_excel(system.file(
+  "extdata",
+  "NC_missing_data.xlsx",
+  package = "epibxb",
+  mustWork = TRUE
+)) %>%
+  dplyr::mutate(year = as.factor(year)) %>%
+  dplyr::mutate(location = as.factor(location)) %>%
+  dplyr::mutate(spread_event = as.factor(spread_event))
+
+# Combine data to replace NA values with distinct data
+dat_nc <-
+  left_join(dat_NC, dat_missing, by = c("year", "location", "spread_event")) %>%
+  mutate(mean_ws = coalesce(mean_ws.x, mean_ws.y)) %>%
+  select(-mean_ws.x, -mean_ws.y) %>%
+  mutate(mean_temp = coalesce(mean_temp.x, mean_temp.y)) %>%
+  select(-mean_temp.x, -mean_temp.y) %>%
+  mutate(mean_rh = coalesce(mean_rh.x, mean_rh.y)) %>%
+  select(-mean_rh.x, -mean_rh.y) %>%
+  mutate(mean_wd = coalesce(mean_wd.x, mean_wd.y)) %>%
+  select(-mean_wd.x, -mean_wd.y) %>%
+  mutate(lwd_duration = coalesce(lwd_duration.x, lwd_duration.y)) %>%
+  select(-lwd_duration.x, -lwd_duration.y) %>%
+  distinct()
+
+dat_nc <- dat_nc %>%
+  mutate(daily_rain = round(total_rain/spev_duration, 2),
+         daily_lwd  = round(lwd_duration/spev_duration, 2))
+
+
+
+# Filter out mulch treatment. Use non-mulch and CP only.
+dat_nc_ncb <- dat_nc %>%
+  filter(treatment != "mulch", treatment != "between_row") # filter non-mulch, CP and between row treatments data
+
+# Data considering only CP treatment
+dat_cp <- dat_nc %>%
+  filter(treatment == "CP")
+
+# Data considering only leaf debris treatment
+dat_ld <- dat_nc %>%
+  filter(treatment == "non_mulch")
+
+# Data considering only between row treatment
+dat_br <- dat_nc %>%
+  filter(treatment == "between_row")
+
+# Data for Lambsburg site only
+dat_lambsburg <- dat_nc %>%
+  filter(location == "Lambsburg") %>%
+  filter(treatment != "mulch", treatment != "between_row")
+```
+
+
+
+### Check data 
+
+```{r kable-data}
+kable(dat_nc_ncb,
+      format = "html",
+      table.attr = "class='table table-hover'")
+```
+
+
+Use `set.seed()` for reproducibility purposes.
+
+```{r set-seed, echo=TRUE}
+set.seed(42)
+```
+
+
+
+## Fit univariate/bivariate glmms
+
+### Mod_1 (Total rain)
+
+```{r mod-1}
+mod_1 <-
+  glmmTMB(total_count ~ total_rain +  (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_1)
+```
+
+
+### Mod_2 (Wind speed)
+
+
+```{r mod-2}
+mod_2 <-
+  glmmTMB(total_count ~ mean_wd * mean_ws + (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_2)
+```
+
+
+### Mod_3 (Wind speed)
+
+```{r mod-3}
+mod_3 <-
+  glmmTMB(total_count ~ mean_wd + (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_3)
+```
+
+
+### Mod_4 (Leaf wetness duration)
+
+```{r mod-4}
+mod_4 <-
+  glmmTMB(total_count ~  lwd_duration +  (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_4)
+```
+
+
+### Mod_5 (Relative humidity)
+
+```{r mod-5}
+mod_5 <-
+  glmmTMB(total_count ~  mean_rh  + (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_5)
+```
+
+
+### mod_6 (Temperature)
+
+```{r mod-6}
+mod_6 <-
+  glmmTMB(total_count ~  mean_temp + (1 | spread_event),
+          family = nbinom2,
+          data = dat_nc_ncb)
+
+summary(mod_6)
+```
+
+
+
+### Fit multivariate glmms
+
+
+```{r mod-7, warning=FALSE}
+mod_7 <-
+  glmmTMB(
+    total_count ~ mean_rh + total_rain + mean_wd * mean_ws + mean_temp * lwd_duration + location + (1 | spread_event), family = nbinom2,
+    data = dat_nc_ncb
+  )
+
+summary(mod_7) 
+```
+
+
+
+## Model Diagnostics 
+
+### Simulate model residuals
+
+Check if model met data assumptions, and if the model predictions can be trusted. 
+
+```{r simulate-residuals}
+simulateResiduals(mod_7, plot = T, quantreg = T)
+```
+
+
+
+### Plot model
+
+Plot main effects of weather variables using `ggplot2`
+
+```{r plot-main-effects}
+# Relative humidity graph
+p1 <- ggpredict(mod_7, "mean_rh[56:96]",
+                type = "random") %>%
+  as.data.frame() %>%
+  rename(mean_rh = x, total_count = predicted) %>%
+  mutate(mean_rh = as.numeric(as.character(mean_rh))) %>%
+  ggplot(aes(mean_rh, total_count)) +
+  geom_line() +
+  geom_ribbon(colour = NA,
+              alpha = 0.1,
+              aes(ymin = conf.low, ymax = conf.high)) +
+  geom_point(data = dat_nc_ncb,
+             size = 1) +
+  annotate("text",
+           x = 80,
+           y = 500,
+           label = "p=0.0001") +
+  # scale_color_distiller(palette = "Spectral") +
+  # scale_fill_distiller(palette = "Spectral", guide = "none") +
+  #coord_cartesian(ylim = range(dat_nc_ncb$total_count), xlim = range(dat_nc_ncb$mean_rh)) +
+  coord_cartesian(ylim = c(0, 690)) +
+  #scale_y_continuous(trans = "log1p") +
+  theme_few(base_size = 11) +
+  labs(x = "Mean RH (%)", y = "Number of infected leaves")
+
+p1
+
+
+# Rainfall graph
+p2 <- ggpredict(mod_7, "total_rain[0:135]",
+                type = "random") %>%
+  as.data.frame() %>%
+  rename(total_rain = x, total_count = predicted) %>%
+  #mutate(total_rain= as.numeric(as.character(total_rain))) %>%
+  ggplot(aes(total_rain, total_count)) +
+  geom_line() +
+  geom_point(data = dat_nc_ncb,
+             size = 1) +
+  geom_ribbon(
+    colour = NA,
+    fill = "black",
+    alpha = 0.1,
+    aes(ymin = conf.low, ymax = conf.high)
+  ) +
+  annotate("text",
+           x = 80,
+           y = 500,
+           label = "p=0.0049") +
+  # scale_color_distiller(palette = "Spectral") +
+  # scale_fill_distiller(palette = "Spectral", guide = "none") +
+  #coord_cartesian(ylim = range(dat_nc_ncb$total_count), xlim = range(dat_nc_ncb$mean_rh)) +
+  coord_cartesian(ylim = c(0, 690), xlim = c(0, 135)) +
+  theme_few(base_size = 11) +
+  labs(x = "Total rain (mm)", y = "")
+
+p2
+
+
+fig_3 <- p1 + p2 + plot_layout(tag_level = 'new') +
+  plot_annotation(tag_levels = list(c('(a)', '(b)'))) &
+    theme(plot.tag = element_text(face = 'bold', size = 11))
+```
+
+
+```{r save-fig_3, include=FALSE, eval=TRUE}
+ggsave(here::here("man", "figures/Fig_3.png"))
+ggsave(here::here("man", "figures/Fig_3.eps"), device = cairo_ps)
+```
+
+
+
+### Plot interaction effect using `ggplot2`
+
+```{r plot-interaction-effect-plot, message=FALSE, warning=FALSE}
+fig_4 <- ggpredict(mod_7, terms = c("lwd_duration[1:160]", "mean_temp[10:27]"), type = "random") %>%
+    as.data.frame() %>%
+    rename(lwd_duration = x, mean_temp = group, total_count = predicted) %>%
+    mutate(mean_temp = as.numeric(as.character(mean_temp)))
+ggplot() +
+    geom_line(data = fig_4, aes(lwd_duration, total_count, color = mean_temp, group = mean_temp), alpha = 0.8) +
+    geom_point(data = dat_nc_ncb, aes(x = lwd_duration, y = total_count, fill = mean_temp), shape = 21, color = "black", size = 2.5) +
+    scale_color_distiller(palette = "Spectral") +
+    scale_fill_distiller(palette = "Spectral", guide = "none") +
+   coord_cartesian(ylim=c(0, 690),xlim = c(1,160)) +
+    annotate("text", x=80, y=500, label= "p=0.0001") +
+    theme_few(base_size = 11) +
+    labs(x = "Leaf Wetness Duration", y = "Number of Infected Leaves", color = "Mean Temperature (°C)")
+```
+
+
+
+```{r save-fig_4, include=FALSE, eval=TRUE}
+ggsave(here::here("man", "figures/Fig_4.png"))
+ggsave(here::here("man", "figures/Fig_4.eps"), device = cairo_ps)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
