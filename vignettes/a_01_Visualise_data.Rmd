@@ -51,7 +51,7 @@ library("lemon")
 library("ggeffects")
 library("ggpubr")
 library("grid")
-library("epibxb")
+library("epiboxwoodblight")
 ```
 
 
@@ -91,7 +91,7 @@ Import disease data recorded at the Lowgap & Lamsburg sites
 disease_dat <- read_excel(system.file(
   "extdata",
   "NC_disease_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -127,7 +127,7 @@ disease_dat <- read_excel(system.file(
 weather_dat_rain <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   select(year,
@@ -156,7 +156,7 @@ weather_dat_no_rain <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   select(
@@ -185,7 +185,7 @@ weather_dat_comb <-
 weather_wet <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -256,7 +256,7 @@ dat_NC <-
 dat_missing <- read_excel(system.file(
   "extdata",
   "NC_missing_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -628,7 +628,7 @@ df1 <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   dplyr::mutate(date = as.Date(date, "%m/%d/%Y")) %>%
@@ -746,7 +746,7 @@ df2 <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   dplyr::mutate(date = as.Date(date, "%m/%d/%Y")) %>%
@@ -830,7 +830,7 @@ weather_rh <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   mutate(day = day(date)) %>%

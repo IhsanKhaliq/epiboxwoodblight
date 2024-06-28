@@ -2,17 +2,19 @@ year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
 
 bibentry(bibtype = "Manual",
-         title = "{rainy}: A research compendium to accompany 'The relationship between rain intensity and Ascochyta blight in chickpea development'",
+         title = "{epiboxwoodblight}: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model'",
          author = c(person("Ihsanul", "Khaliq"),
-                    person("Kevin", "Moore"),
-                    person("Adam H.", "Sparks")),
+                    person("Herve", "Avenot"),
+                    person("Anton", "Baudoin"),
+                    person("Joshua", "Fanning"),
+                    person("Leonard", "Coop"),
+                    person("Chaunxue", "Hong")),
          year = year,
          note = note,
-         url = "https://github.com/IhsanKhaliq/rainy",
-         DOI = "10.5281/zenodo.5077955")
+         url = "https://github.com/IhsanKhaliq/epiboxwoodblight.git")
+
 
 textVersion =
-  paste0("Ihsanul Khaliq, Kevin Moore, Adam H. Sparks (",
+  paste0("Ihsanul Khaliq, Herve Avento, Anton Baudoin, Leonard Coop, Chuanxue Hong (",
          year,
-         "). rainy: A research compendium to accompany 'The relationship between rain intensity and Ascochyta blight in chickpea development",
-         note, ". DOI: 10.5281/zenodo.5077955")
+         "). epiboxwoodblight: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model")

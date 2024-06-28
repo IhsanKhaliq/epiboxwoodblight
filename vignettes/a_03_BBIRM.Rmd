@@ -49,7 +49,7 @@ library("metrica")
 library("ggeffects")
 library("ggpubr")
 library("grid")
-library("epibxb")
+library("epiboxwoodblight")
 ```
 
 
@@ -89,7 +89,7 @@ Import disease data recorded at the Lowgap & Lamsburg sites
 disease_dat <- read_excel(system.file(
   "extdata",
   "NC_disease_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -125,7 +125,7 @@ disease_dat <- read_excel(system.file(
 weather_dat_rain <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   select(year,
@@ -154,7 +154,7 @@ weather_dat_no_rain <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   select(
@@ -183,7 +183,7 @@ weather_dat_comb <-
 weather_wet <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -254,7 +254,7 @@ dat_NC <-
 dat_missing <- read_excel(system.file(
   "extdata",
   "NC_missing_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -316,7 +316,7 @@ base_temperature <- 44
 lookup_table <- read_excel(system.file(
   "extdata",
   "lookup_table.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) 
   
@@ -326,7 +326,7 @@ lookup_table <- read_excel(system.file(
 index <- read_excel(system.file(
   "extdata",
   "hourly_df_index_new.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
  mutate(dry_hour_count = ifelse(lwd_duration == 0, sequence(rle(lwd_duration == 0)$lengths), 0)) %>%
@@ -387,8 +387,8 @@ Compare the model using three different leaf wetness criteria.
 comparison_dat1 <- read_excel(
   system.file(
     "extdata",
-    "Indices_validation_data.xls",
-    package = "epibxb",
+    "Indices_validation_data_new.xlsx",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )
 ) %>%
@@ -512,12 +512,12 @@ Lws_1 <-
    annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.25", "p=0.0330")) +
+           label =c("R²= 0.37", "p=0.0114")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.x = element_blank()) +
  theme(aspect.ratio = 1)
-Lws_1 
+
 
 
 Lws_2 <-
@@ -527,13 +527,13 @@ Lws_2 <-
    annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.27", "p=0.0081")) +
+           label =c("R²= 0.47", "p=0.0006")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.x = element_blank(),
         axis.text.y = element_blank()) +
   theme(aspect.ratio = 1)
-Lws_2
+
 
 
 Lws_3 <-
@@ -543,13 +543,12 @@ Lws_3 <-
   annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.01", "p=0.7649")) +
+           label =c("R²= 0.02", "p=0.6283")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5)) +
  theme(aspect.ratio = 1)
 
 
-Lws_3 
 
 
 Lws_4 <-
@@ -559,24 +558,18 @@ Lws_4 <-
   annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.34", "p=0.0317")) +
+           label =c("R²= 0.3", "p=0.0338")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.y = element_blank()) +
    theme(aspect.ratio = 1)
   
 
-Lws_4 
+
 
 
 lws_plots <- (Lws_1 +Lws_2)/ (Lws_3+ Lws_4) + 
   plot_layout(widths = c(1, 1), heights = c(1, 1))
-
-
-  # lws_plots <- annotate_figure(lws_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1), bottom = textGrob("")) 
-
-lws_plots
-
 
 
 # Fit and plot NLWS models for each year & then combine plots for all four years
@@ -621,13 +614,13 @@ Nlws_1 <-
    annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.06", "p=0.3316")) +
+           label =c("R²= 0.13", "p=0.2393")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.x = element_blank(),
         axis.text.y = element_blank()) +
      theme(aspect.ratio = 1)
-Nlws_1
+
 
 
 Nlws_2 <-
@@ -637,13 +630,13 @@ Nlws_2 <-
    annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.27", "p=0.0199")) +
+           label =c("R²= 0.25", "p=0.0247")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.x = element_blank(),
         axis.text.y = element_blank()) +
      theme(aspect.ratio = 1)
-Nlws_2 
+
 
 
 Nlws_3 <-
@@ -653,12 +646,12 @@ Nlws_3 <-
   annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.11", "p=0.2154")) +
+           label =c("R²= 0.03", "p=0.5884")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.y = element_blank()) +
      theme(aspect.ratio = 1)
-Nlws_3 
+
 
 
 Nlws_4 <-
@@ -668,12 +661,12 @@ Nlws_4 <-
   annotate("text",
            x = c(750, 750),
            y = c(700, 800),
-           label =c("R²= 0.12", "p=0.2140")) +
+           label =c("R²= 0.23", "p=0.0703")) +
   theme_few() +
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.y = element_blank()) +
      theme(aspect.ratio = 1)
-Nlws_4 
+
 
 
 Nlws_plots <- (Nlws_1 +Nlws_2)/ (Nlws_3+ Nlws_4) +
@@ -681,7 +674,6 @@ Nlws_plots <- (Nlws_1 +Nlws_2)/ (Nlws_3+ Nlws_4) +
 
 # Nlws_plots <- annotate_figure(Nlws_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1), bottom = textGrob(""))
 
-Nlws_plots
 
 
 
@@ -733,7 +725,7 @@ rs_1 <-
         axis.text.x = element_blank(),
         axis.text.y = element_blank()) +
       theme(aspect.ratio = 1)
-rs_1
+
 
 
 rs_2 <-
@@ -749,7 +741,7 @@ rs_2 <-
         axis.text.x = element_blank(),
         axis.text.y = element_blank()) +
       theme(aspect.ratio = 1)
-rs_2 
+
 
 
 rs_3 <-
@@ -764,7 +756,8 @@ rs_3 <-
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.y = element_blank()) +
       theme(aspect.ratio = 1)
-rs_3 
+
+
 
 
 rs_4 <-
@@ -779,7 +772,7 @@ rs_4 <-
   theme(plot.title = element_text(hjust = 0.5),
         axis.text.y = element_blank()) +
       theme(aspect.ratio = 1)
-rs_4 
+
 
 
 rs_plots <- (rs_1 + rs_2)/ (rs_3+ rs_4) +
@@ -787,13 +780,12 @@ rs_plots <- (rs_1 + rs_2)/ (rs_3+ rs_4) +
 
 # rs_plots <- annotate_figure(rs_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1))
 
-rs_plots
 
 fig_index_lesions <- wrap_plots(lws_plots, Nlws_plots, rs_plots)
 
   
   ggsave(
-    here("man", "figures/fig_index_lesions.svg"),
+    here("man", "figures/fig_index_lesions.png"),
     plot = fig_index_lesions,
     width = 14,
     height = 6,
@@ -1076,17 +1068,6 @@ roc_plot_rs <-
 abline(0, 1, lty = 2, col = "gray")
 
 ```
-
-
-### Area under the ROC curve
-
-```{r auc}
-auc_nlws <- pROC::auc(roc_nlws)
-auc_nlws
-```
-
-
-
 
 
 

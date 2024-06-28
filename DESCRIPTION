@@ -1,4 +1,4 @@
-Package: epibxb
+Package: epiboxwoodblight
 Title: Research Compendium for the Paper 'Epidemiology of boxwood blight in hotspots of western North Carolina and Virginia and validation of the boxwood blight infection risk model'
 Version: 1.0.1
 Authors@R: 
@@ -36,5 +36,5 @@ Suggests:
     ggeffects,
     ggpubr,
     grid
-URL: https://github.com/IhsanKhaliq/epibxb
-BugReports: https://github.com/IhsanKhaliq/epibxb/issues
+URL: https://github.com/IhsanKhaliq/epiboxwoodblight
+BugReports: https://github.com/IhsanKhaliq/epiboxwoodblight/issues

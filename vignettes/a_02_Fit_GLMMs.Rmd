@@ -40,7 +40,8 @@ library("kableExtra")
 library("DHARMa")
 library("SDMTools")
 library("ggthemes")
-library("epibxb")
+library("patchwork")
+library("epiboxwoodblight")
 ```
 
 
@@ -81,7 +82,7 @@ if (.Platform$OS.type == "windows") {
 disease_dat <- read_excel(system.file(
   "extdata",
   "NC_disease_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -119,7 +120,7 @@ disease_dat <- read_excel(system.file(
 weather_dat_rain <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   select(year,
@@ -148,7 +149,7 @@ weather_dat_no_rain <-
   read_excel(system.file(
     "extdata",
     "NC_weather_data.xlsx",
-    package = "epibxb",
+    package = "epiboxwoodblight",
     mustWork = TRUE
   )) %>%
   select(
@@ -177,7 +178,7 @@ weather_dat_comb <-
 weather_wet <- read_excel(system.file(
   "extdata",
   "NC_weather_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
@@ -247,7 +248,7 @@ dat_NC <-
 dat_missing <- read_excel(system.file(
   "extdata",
   "NC_missing_data.xlsx",
-  package = "epibxb",
+  package = "epiboxwoodblight",
   mustWork = TRUE
 )) %>%
   dplyr::mutate(year = as.factor(year)) %>%
