@@ -4,12 +4,12 @@ Version: 1.0.1
 Authors@R: c(
     person("Ihsanul", "Khaliq", , "hsnkhaliq@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4171-0917")),
-    person("Herve", "Avenot", , "hfavenot@gmail.com", role = "aut"),
-    person("Anton", "Baudoin", , "abaudoin@vt.edu", role = "aut")
-    person("Leonard", "Coop", , "coopl@oregonstate.edu", role = "aut"),
-    person("Chuanxue", "Hong", , "chhong2@vt.edu", role = "aut"),
+    person("Herve", "Avenot", "hfavenot@gmail.com", role = "aut"),
+    person("Anton", "Baudoin", "abaudoin@vt.edu", role = "aut"),
+    person("Leonard", "Coop",  "coopl@oregonstate.edu", role = "aut"),
+    person("Chuanxue", "Hong", "chhong2@vt.edu", role = "aut"),
     person("USDA project 2020-51181-32135", role = "fnd"),
-    person("Farm Bill through USDA Animal and Plant Health Inspection Service, role = "fnd")
+    person("Farm Bill through USDA Animal and Plant Health Inspection Service", role = "fnd")
   )
 Description: Documents the workflow and processes for the paper
 License: MIT + file LICENSE

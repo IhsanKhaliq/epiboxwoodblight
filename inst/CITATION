@@ -1,12 +1,17 @@
-bibentry(bibtype = "Manual",
-         title = "{epiboxwoodblight}: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model'",
-          author = c(person(c("Ihsanul", "Khaliq")),
-                  person(c("Herve", "Avenot")),
-                  person(c("Anton", "Baudoin")),
-                  person(c("Leonard", "Coop")),
-                  person(c("Chuanxue"), "Hong")),
-         year = sub("-.*", "", meta$Date),
-         note = sprintf("R package version %s", meta$Version)
+bib <- bibentry(
+  bibtype = "Manual",
+  title = "{epiboxwoodblight}: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model'",
+  author = list(
+    person("Ihsanul Khaliq"),
+    person("Herve Avenot"),
+    person("Anton Baudoin"),
+    person("Leonard Coop"),
+    person("Chuanxue Hong")
+  ),
+  year = sub("-.*", "", meta$Date),  # Assuming meta$Date is a string with format "YYYY-MM-DD"
+  note = sprintf("R package version %s", meta$Version)
+)
+
 
 
 
