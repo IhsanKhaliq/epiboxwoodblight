@@ -1,22 +1,13 @@
-bib <- bibentry(
-  bibtype = "Manual",
-  title = "{epiboxwoodblight}: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model'",
-  author = list(
-    person("Ihsanul Khaliq"),
-    person("Herve Avenot"),
-    person("Anton Baudoin"),
-    person("Leonard Coop"),
-    person("Chuanxue Hong")
-  ),
-  year = sub("-.*", "", meta$Date),  # Assuming meta$Date is a string with format "YYYY-MM-DD"
-  note = sprintf("R package version %s", meta$Version)
-)
-
-
-
-
-
-
+@software{ihsankhaliq_2024_12594039,
+  author       = {IhsanKhaliq},
+  title        = {IhsanKhaliq/epiboxwoodblight: First release},
+  month        = jun,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {1.0.1},
+  doi          = {10.5281/zenodo.12594039},
+  url          = {https://doi.org/10.5281/zenodo.12594039}
+}
 
 
 
