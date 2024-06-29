@@ -3,6 +3,7 @@
 
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://www.tidyverse.org/lifecycle/#stable) 
+[![DOI](https://zenodo.org/badge/811975851.svg)](https://zenodo.org/doi/10.5281/zenodo.12594038)
 <!-- badges: end -->
 
 The goal of this project is to investigate the field epidemiology of boxwood blight in western North Carolina and Virginia and validate the latest [Boxwood blight infection risk model](https://uspest.org/wea/Boxwood_blight_model_instructions.pdf) with field data.

@@ -1,7 +1,7 @@
 note <- sprintf("R package version %s", meta$Version)
 
 bibentry(bibtype = "Manual",
-         title = "{ChickpeaAscoDispersal}: A research compendium to accompany 'The role of conidia in the dispersal of Ascochyta rabiei'",
+         title = "{epiboxwoodblight}: A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model'",
          author = c(person("Ihsanul", "Khaliq"),
                     person("Herve", "Avenot"),
                     person("Anton", "Baudoin"),
@@ -14,10 +14,5 @@ bibentry(bibtype = "Manual",
 
 textVersion =
   paste0("Ihsanul Khaliq, Herve Avenot, Anton Baudoin, Leonard Coop, Chuanxue Hong (
-         2024). ChickpeaAscoDispersal: A research compendium to accompany 'The role of conidia in the dispersal of Ascochyta rabiei",
+         2024). epiboxwoodblight: A research compendium to accompany 'A research compendium to accompany 'Epidemiology of boxwood blight in western North Carolina and Virginia and validation of boxwood blight infection risk model",
          note, ". DOI: 10.5281/zenodo.12594039")
-
-
-
-
-
