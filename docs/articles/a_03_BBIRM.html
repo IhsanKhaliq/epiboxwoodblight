@@ -74,7 +74,7 @@
                         <h4 data-toc-skip class="author">Ihsan
 Khaliq</h4>
             
-            <h4 data-toc-skip class="date">2024-06-29</h4>
+            <h4 data-toc-skip class="date">2024-07-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/IhsanKhaliq/epiboxwoodblight/blob/HEAD/vignettes/a_03_BBIRM.Rmd" class="external-link"><code>vignettes/a_03_BBIRM.Rmd</code></a></small>
       <div class="d-none name"><code>a_03_BBIRM.Rmd</code></div>
@@ -366,19 +366,18 @@ model which uses leaf wetness recorded by the leaf wetness sensor</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>index_new_anton <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">zero_index</span>, <span class="fl">0</span>, <span class="va">index_lookup</span><span class="op">)</span> <span class="op">*</span> <span class="va">lwd_duration</span> <span class="op">/</span> <span class="fl">60</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># Proportional leaf wetness suggested by Anton</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dhs_exceeding_250_anton <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">index_new_anton</span> <span class="op">&gt;=</span> <span class="fl">250</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>         index_rs_hour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">index_new_anton</span> <span class="op">&gt;</span> <span class="fl">0</span>, <span class="va">index_new_anton</span> <span class="op">-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">index_new_anton</span>, default <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">`cumsum(dry_hour_count &gt; 5)`</span>, <span class="op">-</span><span class="va">zero_index</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Adding missing grouping variables: `cumsum(dry_hour_count &gt; 5)`</span></span></code></pre>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Find maximum value of index and whether disease is predicted or not, and combine with the data </span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">`cumsum(dry_hour_count &gt; 5)`</span>, <span class="op">-</span><span class="va">zero_index</span><span class="op">)</span> </span>
+<span></span>
+<span></span>
+<span><span class="co"># Find maximum value of index and whether disease is predicted or not, and combine with the data </span></span>
 <span><span class="va">index_cap</span> <span class="op">&lt;-</span> <span class="va">index</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">location</span>, <span class="va">spread_event</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>max_index_value_rs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">index_new_anton</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            disease_predicted_rs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">index_new_anton</span><span class="op">&gt;=</span> <span class="fl">250</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
-<span>             index_rs_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">index_rs_hour</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## `summarise()` has grouped output by 'year', 'location'. You can override using</span></span>
-<span><span class="co">## the `.groups` argument.</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">index_cap</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"spread_event"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             index_rs_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">index_rs_hour</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  </span>
+<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">index_cap</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"spread_event"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, spread_event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">spread_event</span><span class="op">)</span><span class="op">)</span> </span>
 <span></span>
 <span><span class="co"># Finally, combine disease data with the index table </span></span>
@@ -389,26 +388,12 @@ model which uses leaf wetness recorded by the leaf wetness sensor</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, spread_event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">spread_event</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">location</span>, <span class="va">spread_event</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>total_count_index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">total_count</span><span class="op">)</span>,</span>
-<span>            epidemic_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">total_count</span><span class="op">&gt;</span><span class="fl">298</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Adding missing grouping variables: `month`, `treatment`, `date_in`, `date_out`,</span></span>
-<span><span class="co">## `cultivar`</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in</span></span>
-<span><span class="co">## dplyr 1.1.0.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Please use `reframe()` instead.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> When switching from `summarise()` to `reframe()`, remember that `reframe()`</span></span>
-<span><span class="co">##   always returns an ungrouped data frame and adjust accordingly.</span></span>
-<span><span class="co">## <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">## <span style="color: #555555;">generated.</span></span></span></code></pre>
-<pre><code><span><span class="co">## `summarise()` has grouped output by 'year', 'location', 'spread_event'. You can</span></span>
-<span><span class="co">## override using the `.groups` argument.</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">ncncb</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"spread_event"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>            epidemic_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">total_count</span><span class="op">&gt;</span><span class="fl">298</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">index</span>, <span class="va">ncncb</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"spread_event"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, spread_event <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">spread_event</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## Warning in left_join(index, ncncb, by = c("year", "location", "spread_event")): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Row 169 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> Row 1 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">##   "many-to-many"` to silence this warning.</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="model-comparison">Model comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
@@ -417,7 +402,7 @@ model which uses leaf wetness recorded by the leaf wetness sensor</p>
 <p><code>lws</code> represents <code>SENSOR</code> model <code>rs</code>
 represents <code>SENSOR-ADJ</code> model <code>nlws</code> represents
 <code>ESTIM-LW</code> model</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Import data and calculate hourly and weekly index</span></span>
 <span><span class="va">comparison_dat1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">read_excel</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
@@ -441,11 +426,9 @@ represents <code>SENSOR-ADJ</code> model <code>nlws</code> represents
 <span>    max_index_value_nlws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">index_nlws</span><span class="op">)</span>,</span>
 <span>    index_nlws_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">index_nlws_hour</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> Can't find package file.</span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#openxlsx::write.xlsx(comparison_dat1, "indices_lc.xlsx")</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#openxlsx::write.xlsx(comparison_dat1, "indices_lc.xlsx")</span></span>
 <span></span>
 <span><span class="va">comparison_dat2</span> <span class="op">&lt;-</span> <span class="va">comparison_dat1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">location</span>, <span class="va">week</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -457,10 +440,10 @@ represents <code>SENSOR-ADJ</code> model <code>nlws</code> represents
 <span>    index_nlws_week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">index_nlws_hour</span><span class="op">)</span>,</span>
 <span>    disease_predicted_nlws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">index_nlws</span> <span class="op">&gt;=</span> <span class="fl">250</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in group_by(., year, location, week): object 'comparison_dat1' not found</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Disease data</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Disease data</span></span>
 <span><span class="va">ncncb</span> <span class="op">&lt;-</span> <span class="va">dat_nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">treatment</span> <span class="op">!=</span> <span class="st">"mulch"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>week <span class="op">=</span> <span class="va">spread_event</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -472,10 +455,9 @@ represents <code>SENSOR-ADJ</code> model <code>nlws</code> represents
 <span></span>
 <span></span>
 <span><span class="va">comparison_dat3</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">comparison_dat2</span>, <span class="va">ncncb</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"week"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in left_join(comparison_dat2, ncncb, by = c("year", "location", : object 'comparison_dat2' not found</span></span></code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Join index that was re-started each week</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">comparison_dat2</span>, <span class="va">ncncb</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"week"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Join index that was re-started each week</span></span>
 <span><span class="va">index_rs</span> <span class="op">&lt;-</span> <span class="va">index_cap</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>week <span class="op">=</span> <span class="va">spread_event</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>,</span>
@@ -483,7 +465,6 @@ represents <code>SENSOR-ADJ</code> model <code>nlws</code> represents
 <span></span>
 <span><span class="va">comparison_dat4</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">comparison_dat3</span>, <span class="va">index_rs</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"week"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in left_join(comparison_dat3, index_rs, by = c("year", "location", : object 'comparison_dat3' not found</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="totat-weekly-accumulated-blight-risk-index-infected-leaf-count-relationship">Totat weekly accumulated blight risk index &amp; infected leaf count
@@ -492,67 +473,147 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <div class="section level3">
 <h3 id="glms">GLMs<a class="anchor" aria-label="anchor" href="#glms"></a>
 </h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">dat_2014</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in filter(., year == 2014): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat_2015</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in filter(., year == 2015): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat_2016</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in filter(., year == 2016): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat_2017</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in filter(., year == 2017): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Fit &amp; plot LWS models for each year</span></span>
-<span><span class="va">lws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2014): object 'lws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2014</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat_2015</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2015</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat_2016</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2016</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dat_2017</span> <span class="op">&lt;-</span> <span class="va">comparison_dat4</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">year</span><span class="op">==</span><span class="fl">2017</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fit &amp; plot LWS models for each year</span></span>
+<span><span class="va">lws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2014</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_lws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2014)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##      Min        1Q    Median        3Q       Max  </span></span>
+<span><span class="co">## -15.0445   -7.9139   -5.2653   -0.4034   26.2879  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)    2.2379339  0.9484794   2.359   0.0298 *</span></span>
+<span><span class="co">## index_lws_week 0.0010134  0.0003597   2.817   0.0114 *</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 158.4062)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 3507.2  on 19  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 2202.2  on 18  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_lws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2014): object 'lws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2015): object 'lws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_lws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">lws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2015</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_lws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2015)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -18.438   -9.262   -6.074    3.491   40.719  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">## (Intercept)    2.8726576  0.6883836   4.173  0.00034 ***</span></span>
+<span><span class="co">## index_lws_week 0.0014324  0.0003634   3.942  0.00061 ***</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 235.5526)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 7584.1  on 25  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 4010.6  on 24  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_lws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2015): object 'lws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2016): object 'lws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_lws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">lws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2016</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_lws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2016)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -11.048   -9.626   -8.385   -7.127   43.574  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">## (Intercept)    3.6805521  1.0068709   3.655  0.00139 **</span></span>
+<span><span class="co">## index_lws_week 0.0002833  0.0005771   0.491  0.62834   </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 341.6754)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 4096.4  on 23  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 4011.3  on 22  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_lws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2016): object 'lws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2017): object 'lws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_lws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">lws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_lws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2017</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_lws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2017)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##      Min        1Q    Median        3Q       Max  </span></span>
+<span><span class="co">## -13.5926   -5.4541   -2.6242    0.2849   14.0736  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                  Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)    -1.4801073  2.1115755  -0.701   0.4948  </span></span>
+<span><span class="co">## index_lws_week  0.0021936  0.0009327   2.352   0.0338 *</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 47.68894)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 950.55  on 15  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 666.81  on 14  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 7</span></span></code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_lws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(lws_2017): object 'lws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># plot all LWS models</span></span>
+<span><span class="va">r_squared_lws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">lws_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot all LWS models</span></span>
 <span></span>
 <span><span class="va">Lws_1</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">lws_2014</span>, <span class="st">"index_lws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
@@ -565,10 +626,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(lws_2014, "index_lws_week"): object 'lws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Lws_2</span> <span class="op">&lt;-</span></span>
+<span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Lws_2</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">lws_2015</span>, <span class="st">"index_lws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -580,10 +642,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(lws_2015, "index_lws_week"): object 'lws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Lws_3</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Lws_3</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">lws_2016</span>, <span class="st">"index_lws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"LWS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -593,10 +656,12 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>           label <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"R²= 0.02"</span>, <span class="st">"p=0.6283"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(lws_2016, "index_lws_week"): object 'lws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Lws_4</span> <span class="op">&lt;-</span></span>
+<span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Lws_4</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">lws_2017</span>, <span class="st">"index_lws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"LWS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2017</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -607,56 +672,143 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(lws_2017, "index_lws_week"): object 'lws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lws_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">Lws_1</span> <span class="op">+</span><span class="va">Lws_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">Lws_3</span><span class="op">+</span> <span class="va">Lws_4</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'Lws_1' not found</span></span></code></pre>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Fit and plot NLWS models for each year &amp; then combine plots for all four years</span></span>
+<span>   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>  </span>
 <span></span>
-<span><span class="va">nlws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2014): object 'nlws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">lws_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">Lws_1</span> <span class="op">+</span><span class="va">Lws_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">Lws_3</span><span class="op">+</span> <span class="va">Lws_4</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># Fit and plot NLWS models for each year &amp; then combine plots for all four years</span></span>
+<span></span>
+<span><span class="va">nlws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2014</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_nlws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2014)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -13.057  -10.599   -8.280   -3.207   32.476  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                  Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)     2.7088248  1.4978372   1.808   0.0873 .</span></span>
+<span><span class="co">## index_nlws_week 0.0006264  0.0005147   1.217   0.2393  </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 255.947)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 3507.2  on 19  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 3053.4  on 18  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 7</span></span></code></pre>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_nlws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2014): object 'nlws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nlws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2015): object 'nlws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_nlws_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">nlws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2015</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_nlws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2015)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -24.746  -12.699   -7.057    3.373   37.809  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                  Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)     2.2758071  1.2100757   1.881   0.0722 .</span></span>
+<span><span class="co">## index_nlws_week 0.0010608  0.0004427   2.396   0.0247 *</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 270.8002)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 7584.1  on 25  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 5715.7  on 24  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_nlws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2015): object 'nlws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nlws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2016): object 'nlws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_nlws_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">nlws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2016</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_nlws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2016)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -11.225   -9.305   -8.120   -6.792   43.554  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                  Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">## (Intercept)     3.6027154  1.0619616   3.393  0.00262 **</span></span>
+<span><span class="co">## index_nlws_week 0.0002467  0.0004493   0.549  0.58844   </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 341.3815)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 4096.4  on 23  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 3989.2  on 22  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 7</span></span></code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_nlws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2016): object 'nlws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nlws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2017): object 'nlws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_nlws_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">nlws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_nlws_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2017</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_nlws_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2017)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##      Min        1Q    Median        3Q       Max  </span></span>
+<span><span class="co">## -12.7142   -4.7841   -3.5733   -0.3992   13.9502  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                   Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)     -0.0641031  1.7630515  -0.036   0.9715  </span></span>
+<span><span class="co">## index_nlws_week  0.0011282  0.0005759   1.959   0.0703 .</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 58.10312)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 950.55  on 15  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 735.59  on 14  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 7</span></span></code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_nlws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(nlws_2017): object 'nlws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># plot all NLWS models</span></span>
+<span><span class="va">r_squared_nlws_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">nlws_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot all NLWS models</span></span>
 <span><span class="va">Nlws_1</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">nlws_2014</span>, <span class="st">"index_nlws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2014</span><span class="op">)</span> <span class="op">+</span></span>
@@ -669,10 +821,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(nlws_2014, "index_nlws_week"): object 'nlws_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Nlws_2</span> <span class="op">&lt;-</span></span>
+<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Nlws_2</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">nlws_2015</span>, <span class="st">"index_nlws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -684,10 +837,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(nlws_2015, "index_nlws_week"): object 'nlws_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Nlws_3</span> <span class="op">&lt;-</span></span>
+<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Nlws_3</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">nlws_2016</span>, <span class="st">"index_nlws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"NLWS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -698,10 +852,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(nlws_2016, "index_nlws_week"): object 'nlws_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Nlws_4</span> <span class="op">&lt;-</span></span>
+<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Nlws_4</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">nlws_2017</span>, <span class="st">"index_nlws_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"NLWS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2017</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -712,61 +867,145 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(nlws_2017, "index_nlws_week"): object 'nlws_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">Nlws_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">Nlws_1</span> <span class="op">+</span><span class="va">Nlws_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">Nlws_3</span><span class="op">+</span> <span class="va">Nlws_4</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'Nlws_1' not found</span></span></code></pre>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Nlws_plots &lt;- annotate_figure(Nlws_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1), bottom = textGrob(""))</span></span>
+<span>     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">Nlws_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">Nlws_1</span> <span class="op">+</span><span class="va">Nlws_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">Nlws_3</span><span class="op">+</span> <span class="va">Nlws_4</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Nlws_plots &lt;- annotate_figure(Nlws_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1), bottom = textGrob(""))</span></span>
 <span></span>
 <span></span>
 <span></span>
 <span></span>
 <span><span class="co"># Fit and plot RS models for each year &amp; then combine plots for all four years</span></span>
 <span></span>
-<span><span class="va">rs_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2014</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2014): object 'rs_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<span><span class="va">rs_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2014</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2014</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_rs_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2014)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##      Min        1Q    Median        3Q       Max  </span></span>
+<span><span class="co">## -14.9030   -7.9578   -5.0701   -0.4303   25.8995  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">## (Intercept)   2.1682356  0.9466880   2.290  0.03429 * </span></span>
+<span><span class="co">## index_rs_week 0.0010756  0.0003692   2.913  0.00927 **</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 151.4254)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 3507.2  on 19  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 2149.0  on 18  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_rs_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2014): object 'rs_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2015</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2015): object 'rs_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_rs_2014</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2014</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2015</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2015</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_rs_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2015)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -18.831   -9.250   -5.709    2.297   39.880  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span><span class="co">## (Intercept)   2.9260693  0.6517106   4.490 0.000152 ***</span></span>
+<span><span class="co">## index_rs_week 0.0014397  0.0003489   4.127 0.000383 ***</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 225.8005)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 7584.1  on 25  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 3916.6  on 24  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_rs_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2015): object 'rs_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2016</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2016): object 'rs_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_rs_2015</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2015</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2016</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2016</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_rs_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2016)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##     Min       1Q   Median       3Q      Max  </span></span>
+<span><span class="co">## -11.238   -9.541   -8.301   -6.973   43.439  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                Estimate Std. Error t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">## (Intercept)   3.6485311  1.0126663   3.603  0.00158 **</span></span>
+<span><span class="co">## index_rs_week 0.0003176  0.0006015   0.528  0.60280   </span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 338.8323)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 4096.4  on 23  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 3998.0  on 22  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_rs_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2016): object 'rs_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(data): object 'dat_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2017</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2017): object 'rs_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<span><span class="va">r_squared_rs_2016</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2016</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">total_count</span> <span class="op">~</span> <span class="va">index_rs_week</span>, family <span class="op">=</span> <span class="va">quasipoisson</span>, data<span class="op">=</span> <span class="va">dat_2017</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2017</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## Call:</span></span>
+<span><span class="co">## glm(formula = total_count ~ index_rs_week, family = quasipoisson, </span></span>
+<span><span class="co">##     data = dat_2017)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Deviance Residuals: </span></span>
+<span><span class="co">##      Min        1Q    Median        3Q       Max  </span></span>
+<span><span class="co">## -14.0856   -4.8697   -2.1900    0.3873   11.9836  </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Coefficients:</span></span>
+<span><span class="co">##                 Estimate Std. Error t value Pr(&gt;|t|)  </span></span>
+<span><span class="co">## (Intercept)   -2.3052474  2.0869813  -1.105   0.2880  </span></span>
+<span><span class="co">## index_rs_week  0.0026681  0.0009413   2.835   0.0132 *</span></span>
+<span><span class="co">## ---</span></span>
+<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## (Dispersion parameter for quasipoisson family taken to be 38.11435)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     Null deviance: 950.55  on 15  degrees of freedom</span></span>
+<span><span class="co">## Residual deviance: 592.01  on 14  degrees of freedom</span></span>
+<span><span class="co">## AIC: NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of Fisher Scoring iterations: 6</span></span></code></pre>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#calculate McFadden's R-squared for model</span></span>
-<span><span class="va">r_squared_rs_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in summary(rs_2017): object 'rs_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># plot all NLWS models</span></span>
+<span><span class="va">r_squared_rs_2017</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rs_2017</span><span class="op">)</span>, <span class="fl">1</span> <span class="op">-</span> <span class="va">deviance</span><span class="op">/</span><span class="va">null.deviance</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot all NLWS models</span></span>
 <span><span class="va">rs_1</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">rs_2014</span>, <span class="st">"index_rs_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2014</span><span class="op">)</span> <span class="op">+</span></span>
@@ -779,10 +1018,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(rs_2014, "index_rs_week"): object 'rs_2014' not found</span></span></code></pre>
-<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_2</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_2</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">rs_2015</span>, <span class="st">"index_rs_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -794,10 +1034,11 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(rs_2015, "index_rs_week"): object 'rs_2015' not found</span></span></code></pre>
-<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_3</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_3</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">rs_2016</span>, <span class="st">"index_rs_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"RS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2016</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -808,10 +1049,12 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(rs_2016, "index_rs_week"): object 'rs_2016' not found</span></span></code></pre>
-<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_4</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">rs_4</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html" class="external-link">ggpredict</a></span><span class="op">(</span><span class="va">rs_2017</span>, <span class="st">"index_rs_week"</span><span class="op">)</span>, rawdata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"RS model"</span>, y <span class="op">=</span> <span class="st">""</span>, title <span class="op">=</span> <span class="fl">2017</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1000</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">3000</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -822,36 +1065,35 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggthemes/man/theme_few.html" class="external-link">theme_few</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>        axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggpredict(rs_2017, "index_rs_week"): object 'rs_2017' not found</span></span></code></pre>
-<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rs_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">rs_1</span> <span class="op">+</span> <span class="va">rs_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">rs_3</span><span class="op">+</span> <span class="va">rs_4</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'rs_1' not found</span></span></code></pre>
-<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># rs_plots &lt;- annotate_figure(rs_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1))</span></span>
+<span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span></span>
-<span><span class="va">fig_index_lesions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">lws_plots</span>, <span class="va">Nlws_plots</span>, <span class="va">rs_plots</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.ggplot(x): object 'lws_plots' not found</span></span></code></pre>
-<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span></span>
+<span><span class="va">rs_plots</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">rs_1</span> <span class="op">+</span> <span class="va">rs_2</span><span class="op">)</span><span class="op">/</span> <span class="op">(</span><span class="va">rs_3</span><span class="op">+</span> <span class="va">rs_4</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>, heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># rs_plots &lt;- annotate_figure(rs_plots, left = textGrob("Number of infected leaves", rot = 90, vjust = 1))</span></span>
+<span></span>
+<span></span>
+<span><span class="va">fig_index_lesions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span><span class="va">lws_plots</span>, <span class="va">Nlws_plots</span>, <span class="va">rs_plots</span><span class="op">)</span></span>
+<span></span>
+<span>  </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"man"</span>, <span class="st">"figures/fig_index_lesions.png"</span><span class="op">)</span>,</span>
 <span>    plot <span class="op">=</span> <span class="va">fig_index_lesions</span>,</span>
 <span>    width <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>    height <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>    units <span class="op">=</span> <span class="st">"in"</span>,</span>
 <span>    dpi <span class="op">=</span> <span class="fl">600</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot_theme(plot): object 'fig_index_lesions' not found</span></span></code></pre>
-<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig_index_lesions</span>  </span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'fig_index_lesions' not found</span></span></code></pre>
+<span>  <span class="op">)</span></span>
+<span>  </span>
+<span><span class="va">fig_index_lesions</span>  </span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/leaf-count-model-association-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="plot-total-weekly-accumulated-blight-risk-index-values">Plot total weekly accumulated blight risk index values<a class="anchor" aria-label="anchor" href="#plot-total-weekly-accumulated-blight-risk-index-values"></a>
 </h3>
-<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_weeeek</span> <span class="op">&lt;-</span> <span class="va">dat_nc_ncb</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date_in <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date_in</span>, <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">date_in</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -880,10 +1122,9 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>             <span class="st">"index_rs_week"</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"Model"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"index_weekly_value"</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in rename(., spread_event = week): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">index_dfff</span> <span class="op">&lt;-</span> <span class="va">comparison_dat_6</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">index_dfff</span> <span class="op">&lt;-</span> <span class="va">comparison_dat_6</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    Model <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/recode.html" class="external-link">recode</a></span><span class="op">(</span></span>
 <span>      <span class="va">Model</span>,</span>
@@ -891,32 +1132,28 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>      <span class="st">"index_lws_week"</span> <span class="op">=</span> <span class="st">"SENSOR model"</span>,</span>
 <span>      <span class="st">"index_nlws_week"</span> <span class="op">=</span> <span class="st">"ESTIM-LW model"</span></span>
 <span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in mutate(., Model = recode(Model, index_rs_week = "SENSOR-ADJ model", : object 'comparison_dat_6' not found</span></span></code></pre>
-<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat_week</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">dat_week</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">dat_weeeek</span>,</span>
 <span>            <span class="va">index_dfff</span>,</span>
 <span>            by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>, <span class="st">"location"</span>, <span class="st">"spread_event"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">location</span>, <span class="va">spread_event</span>, <span class="va">Model</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in is.data.frame(y): object 'index_dfff' not found</span></span></code></pre>
-<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/write.xlsx.html" class="external-link">write.xlsx</a></span><span class="op">(</span><span class="va">dat_week</span>, <span class="st">"check.xlsx"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in buildWorkbook(x, asTable = asTable, ...): object 'dat_week' not found</span></span></code></pre>
-<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dates_weeks</span> <span class="op">&lt;-</span> <span class="va">dat_week</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">location</span>, <span class="va">spread_event</span>, <span class="va">Model</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/write.xlsx.html" class="external-link">write.xlsx</a></span><span class="op">(</span><span class="va">dat_week</span>, <span class="st">"check.xlsx"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">dates_weeks</span> <span class="op">&lt;-</span> <span class="va">dat_week</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>date <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd.html" class="external-link">mdy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">date_in</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>         week <span class="op">=</span> <span class="fu"><a href="https://lubridate.tidyverse.org/reference/week.html" class="external-link">week</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2015</span> <span class="op">&amp;</span> <span class="va">spread_event</span> <span class="op">==</span> <span class="fl">24</span>, <span class="fl">43</span>, <span class="va">week</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in mutate(dat_week, date = mdy(paste0(date_in, year)), week = week(date)): object 'dat_week' not found</span></span></code></pre>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">min_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">dates_weeks</span><span class="op">$</span><span class="va">week</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'dates_weeks' not found</span></span></code></pre>
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">max_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">dates_weeks</span><span class="op">$</span><span class="va">week</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'dates_weeks' not found</span></span></code></pre>
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">year_breaks</span> <span class="op">&lt;-</span> <span class="fl">2017</span><span class="op">:</span><span class="fl">2014</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">year</span> <span class="op">==</span> <span class="fl">2015</span> <span class="op">&amp;</span> <span class="va">spread_event</span> <span class="op">==</span> <span class="fl">24</span>, <span class="fl">43</span>, <span class="va">week</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="va">min_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">dates_weeks</span><span class="op">$</span><span class="va">week</span><span class="op">)</span></span>
+<span><span class="va">max_week</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">dates_weeks</span><span class="op">$</span><span class="va">week</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">year_breaks</span> <span class="op">&lt;-</span> <span class="fl">2017</span><span class="op">:</span><span class="fl">2014</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rlang.r-lib.org/reference/set_names.html" class="external-link">set_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">year_n</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">year_dat</span> <span class="op">&lt;-</span> <span class="va">dates_weeks</span> <span class="op">|&gt;</span></span>
@@ -933,14 +1170,10 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>    </span>
 <span>    <span class="va">week_map</span></span>
 <span>    </span>
-<span>  <span class="op">}</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `map()`:</span></span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> In index: 1.</span></span>
-<span><span class="co">## <span style="color: #00BBBB;">ℹ</span> With name: 2017.</span></span>
-<span><span class="co">## <span style="font-weight: bold;">Caused by error in `filter()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> object 'dates_weeks' not found</span></span></code></pre>
-<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">dates_weeks</span> <span class="op">|&gt;</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">dates_weeks</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>week <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">week</span><span class="op">)</span>,</span>
 <span>         `Inoculum source` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">`Inoculum source`</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span>data <span class="op">=</span> <span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -980,31 +1213,31 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>    axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>    strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
 <span>    </span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in mutate(dates_weeks, week = factor(week), `Inoculum source` = factor(`Inoculum source`)): object 'dates_weeks' not found</span></span></code></pre>
-<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Date of detector plants placement in the field"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Center x-axis label</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_sum_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_elements.html" class="external-link">wrap_elements</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Center x-axis label</span></span>
+<span></span>
+<span></span>
+<span><span class="va">p_sum_index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_elements.html" class="external-link">wrap_elements</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>tag <span class="op">=</span> <span class="st">"Total weekly accumulated blight risk index"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">rel</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, angle <span class="op">=</span> <span class="fl">90</span><span class="op">)</span>,</span>
-<span>        plot.tag.position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in wrap_elements(p): object 'p' not found</span></span></code></pre>
-<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span>        plot.tag.position <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"man"</span>, <span class="st">"figures/p_sum_index.png"</span><span class="op">)</span>,</span>
 <span>  plot <span class="op">=</span> <span class="va">p_sum_index</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  height <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  units <span class="op">=</span> <span class="st">"in"</span>,</span>
 <span>  dpi <span class="op">=</span> <span class="fl">1000</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot_theme(plot): object 'p_sum_index' not found</span></span></code></pre>
-<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"man"</span>, <span class="st">"figures/p_sum_index.eps"</span><span class="op">)</span>,</span>
 <span>  plot <span class="op">=</span> <span class="va">p_sum_index</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">7</span>,</span>
@@ -1012,11 +1245,10 @@ relationship<a class="anchor" aria-label="anchor" href="#totat-weekly-accumulate
 <span>  units <span class="op">=</span> <span class="st">"in"</span>,</span>
 <span>  dpi <span class="op">=</span> <span class="fl">600</span>,</span>
 <span>  device <span class="op">=</span>  <span class="va">cairo_ps</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot_theme(plot): object 'p_sum_index' not found</span></span></code></pre>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_sum_index</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p_sum_index' not found</span></span></code></pre>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_sum_index</span></span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/plot-hourly-infection-risk-index-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -1031,23 +1263,16 @@ sensor<a class="anchor" aria-label="anchor" href="#predictions-when-leaf-wetness
 <div class="section level3">
 <h3 id="confusion-matrices">Confusion matrices<a class="anchor" aria-label="anchor" href="#confusion-matrices"></a>
 </h3>
-<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">disease_predicted_lws</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_lws</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in factor(comparison_dat4$disease_predicted_lws): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">disease_predicted_nlws</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_nlws</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in factor(comparison_dat4$disease_predicted_nlws): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">disease_predicted_rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_rs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in factor(comparison_dat4$disease_predicted_rs): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">disease_recorded</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_recorded_detector_plants</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in factor(comparison_dat4$disease_recorded_detector_plants): object 'comparison_dat4' not found</span></span></code></pre>
-<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">confusion_matrix_lws</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_lws</span><span class="op">)</span></span>
+<span><span class="va">disease_predicted_nlws</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_nlws</span><span class="op">)</span></span>
+<span><span class="va">disease_predicted_rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_predicted_rs</span><span class="op">)</span></span>
+<span><span class="va">disease_recorded</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">comparison_dat4</span><span class="op">$</span><span class="va">disease_recorded_detector_plants</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">confusion_matrix_lws</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">metrica</span><span class="fu">::</span><span class="fu"><a href="https://adriancorrendo.github.io/metrica/reference/confusion_matrix.html" class="external-link">confusion_matrix</a></span><span class="op">(</span></span>
 <span>    obs <span class="op">=</span> <span class="va">disease_recorded</span>,</span>
 <span>    pred <span class="op">=</span> <span class="va">disease_predicted_lws</span>,</span>
@@ -1057,10 +1282,9 @@ sensor<a class="anchor" aria-label="anchor" href="#predictions-when-leaf-wetness
 <span>    position_metrics <span class="op">=</span> <span class="st">"top"</span>,</span>
 <span>    colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#1f78b4"</span>, high <span class="op">=</span> <span class="st">"#33a02c"</span><span class="op">)</span>,</span>
 <span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ~disease_predicted_lws: object 'disease_predicted_lws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">confusion_matrix_nlws</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span><span class="va">confusion_matrix_nlws</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">metrica</span><span class="fu">::</span><span class="fu"><a href="https://adriancorrendo.github.io/metrica/reference/confusion_matrix.html" class="external-link">confusion_matrix</a></span><span class="op">(</span></span>
 <span>    obs <span class="op">=</span> <span class="va">disease_recorded</span>,</span>
 <span>    pred <span class="op">=</span> <span class="va">disease_predicted_nlws</span>,</span>
@@ -1070,10 +1294,10 @@ sensor<a class="anchor" aria-label="anchor" href="#predictions-when-leaf-wetness
 <span>    position_metrics <span class="op">=</span> <span class="st">"top"</span>,</span>
 <span>    colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#1f78b4"</span>, high <span class="op">=</span> <span class="st">"#33a02c"</span><span class="op">)</span>,</span>
 <span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ~disease_predicted_nlws: object 'disease_predicted_nlws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">confusion_matrix_rs</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">confusion_matrix_rs</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">metrica</span><span class="fu">::</span><span class="fu"><a href="https://adriancorrendo.github.io/metrica/reference/confusion_matrix.html" class="external-link">confusion_matrix</a></span><span class="op">(</span></span>
 <span>    obs <span class="op">=</span> <span class="va">disease_recorded</span>,</span>
 <span>    pred <span class="op">=</span> <span class="va">disease_predicted_rs</span>,</span>
@@ -1083,82 +1307,73 @@ sensor<a class="anchor" aria-label="anchor" href="#predictions-when-leaf-wetness
 <span>    position_metrics <span class="op">=</span> <span class="st">"top"</span>,</span>
 <span>    colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>low <span class="op">=</span> <span class="st">"#1f78b4"</span>, high <span class="op">=</span> <span class="st">"#33a02c"</span><span class="op">)</span>,</span>
 <span>    na.rm <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ~disease_predicted_rs: object 'disease_predicted_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig_matrix</span> <span class="op">&lt;-</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">fig_matrix</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">confusion_matrix_lws</span> <span class="op">+</span> <span class="va">confusion_matrix_nlws</span> <span class="op">+</span> <span class="va">confusion_matrix_rs</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_layout.html" class="external-link">plot_layout</a></span><span class="op">(</span>ncol <span class="op">=</span></span>
 <span>                                                                                     <span class="fl">1</span>, tag_level <span class="op">=</span> <span class="st">'new'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'(A)'</span>, <span class="st">'(B)'</span>, <span class="st">'(C)'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'confusion_matrix_lws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fig_matrix</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'fig_matrix' not found</span></span></code></pre>
+<span>  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span>tag_levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'(A)'</span>, <span class="st">'(B)'</span>, <span class="st">'(C)'</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">fig_matrix</span></span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/confusion-matrices-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="f1-scores">F1 scores<a class="anchor" aria-label="anchor" href="#f1-scores"></a>
 </h3>
-<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate accuracy</span></span>
-<span><span class="va">accuracy_rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="va">disease_recorded</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in mean(disease_predicted_rs == disease_recorded): object 'disease_predicted_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Calculate precision</span></span>
+<span><span class="va">accuracy_rs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="va">disease_recorded</span><span class="op">)</span></span>
+<span><span class="co"># Calculate precision</span></span>
 <span><span class="va">precision_rs</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span></span>
-<span>        <span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'disease_predicted_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Calculate recall</span></span>
+<span>        <span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># Calculate recall</span></span>
 <span><span class="va">recall_rs</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span> <span class="op">==</span> <span class="fl">1</span> <span class="op">&amp;</span></span>
-<span>        <span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'disease_predicted_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Calculate F1-score</span></span>
+<span>        <span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">disease_recorded</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Calculate F1-score</span></span>
 <span><span class="va">f1_score_rs</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="va">precision_rs</span> <span class="op">*</span> <span class="va">recall_rs</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">precision_rs</span> <span class="op">+</span> <span class="va">recall_rs</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'precision_rs' not found</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="reciever-operating-characteristics-curve-roc">Reciever Operating Characteristics Curve (ROC)<a class="anchor" aria-label="anchor" href="#reciever-operating-characteristics-curve-roc"></a>
 </h3>
-<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_lws</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">pROC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pROC/man/roc.html" class="external-link">roc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_predicted_lws</span><span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_recorded</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in pROC::roc(as.integer(disease_predicted_lws), as.integer(disease_recorded)): object 'disease_predicted_lws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Setting levels: control = 1, case = 2</span></span></code></pre>
+<pre><code><span><span class="co">## Setting direction: controls &lt; cases</span></span></code></pre>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_plot_lws</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_lws</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_lws"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot(roc_lws, main = "ROC curve for index_lws", col = "blue"): object 'roc_lws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet</span></span></code></pre>
-<div class="sourceCode" id="cb200"><pre class="downlit sourceCode r">
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_lws</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_lws"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/roc-1.png" width="960" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_nlws</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">pROC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pROC/man/roc.html" class="external-link">roc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_predicted_nlws</span><span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_recorded</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in pROC::roc(as.integer(disease_predicted_nlws), as.integer(disease_recorded)): object 'disease_predicted_nlws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Setting levels: control = 1, case = 2</span></span>
+<span><span class="co">## Setting direction: controls &lt; cases</span></span></code></pre>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_plot_nlws</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_nlws</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_nlws"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot(roc_nlws, main = "ROC curve for index_nlws", col = "blue"): object 'roc_nlws' not found</span></span></code></pre>
-<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet</span></span></code></pre>
-<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_nlws</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_nlws"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/roc-2.png" width="960" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_rs</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu">pROC</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pROC/man/roc.html" class="external-link">roc</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_predicted_rs</span><span class="op">)</span>,</span>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">disease_recorded</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in pROC::roc(as.integer(disease_predicted_rs), as.integer(disease_recorded)): object 'disease_predicted_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## Setting levels: control = 1, case = 2</span></span>
+<span><span class="co">## Setting direction: controls &lt; cases</span></span></code></pre>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">roc_plot_rs</span> <span class="op">&lt;-</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_rs</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_rx"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in plot(roc_rs, main = "ROC curve for index_rx", col = "blue"): object 'roc_rs' not found</span></span></code></pre>
-<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...): plot.new has not been called yet</span></span></code></pre>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">roc_rs</span>, main <span class="op">=</span> <span class="st">"ROC curve for index_rx"</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, lty <span class="op">=</span> <span class="fl">2</span>, col <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="a_03_BBIRM_files/figure-html/roc-3.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -1168,7 +1383,7 @@ sensor<a class="anchor" aria-label="anchor" href="#predictions-when-leaf-wetness
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Ihsanul Khaliq, Herve <a href="mailto:hfavenot@gmail.com" class="email">hfavenot@gmail.com</a> Avenot, Anton <a href="mailto:abaudoin@vt.edu" class="email">abaudoin@vt.edu</a> Baudoin, Leonard <a href="mailto:coopl@oregonstate.edu" class="email">coopl@oregonstate.edu</a> Coop, Chuanxue <a href="mailto:chhong2@vt.edu" class="email">chhong2@vt.edu</a> Hong, USDA project 2020-51181-32135, Farm Bill through USDA Animal and Plant Health Inspection Service.</p>
+  <p>Developed by Ihsanul Khaliq, Herve Avenot, Anton Baudoin, Leonard Coop, Chuanxue Hong, USDA project 2020-51181-32135, Farm Bill through USDA Animal and Plant Health Inspection Service.</p>
 </div>
 
 <div class="pkgdown-footer-right">
