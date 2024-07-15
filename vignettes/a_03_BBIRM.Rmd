@@ -309,7 +309,7 @@ dat_lambsburg <- dat_nc %>%
 ## Boxwood blight infection risk model
 
 Run [Boxwood blight infection risk model](https://uspest.org/wea/Boxwood_blight_model_instructions.pdf). This the SENSOR-ADJ version of the model which uses leaf wetness recorded by the leaf wetness sensor
-```{r run-model}
+```{r run-model, warning=FALSE, message=FALSE}
 base_temperature <- 44
 
 
